@@ -1,7 +1,7 @@
 # **Python RSA 3.4.2 Security Testing** 
 ---
   
-### **Group 10**
+### **Group 7**
 
 
 1. Vatsal Pandya | <vatsal.pandya@rutgers.edu> 
