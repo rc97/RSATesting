@@ -23,5 +23,5 @@ Documentation can be found at the [Python-RSA homepage](https://stuvel.eu/rsa)
 
 Download and install using:
 
-	pip install rsa
+	pip install -r requirements.txt
 

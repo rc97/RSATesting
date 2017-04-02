@@ -1,9 +1,0 @@
-What makes good primes?
-
-
-What is the general procedure for generating primes with in the library?
-
-
-Are they following industry standard?
-
-Is it secure?
