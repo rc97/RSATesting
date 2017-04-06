@@ -33,31 +33,40 @@ public class Main {
 	 public static void testRSABitCount() throws NoSuchAlgorithmException {
 		    long start_time = System.nanoTime();
 	        KeyPairGenerator rsa = KeyPairGenerator.getInstance("RSA", new BouncyCastleProvider());
-	        rsa.initialize(5000, new SecureRandom());
+	        rsa.initialize(1024, new SecureRandom());
 	        int total = 0;
 	        
 	        int zeroBitsApart = 0, smallD = 0, smallE = 0, sameN = 0, samePorQ = 0;
 	        double nsize = 0, psize = 0, qsize = 0, esize = 0, dsize = 0;
 	        HashSet<BigInteger> ns = new HashSet<BigInteger>();
 	        HashSet<BigInteger> pqs = new HashSet<BigInteger>();
+	        int leastDifference = Integer.MAX_VALUE;
+	        double differences = 0;
+	        int badDiff = 0;
 	     
-	        while (total < 1) {
+	        while (total < 10000) {
 	        	
-	        	if (total % 100 == 0){
+	        	if (total % 100 == 0 && total != 0){
 	        		System.out.println(total);
 	        	}
 	        	
 	            KeyPair keyPair = rsa.generateKeyPair();
 	            PrivateKey privateKey = keyPair.getPrivate();
 	            BCRSAPrivateCrtKey privateCrtKey = (BCRSAPrivateCrtKey) privateKey;
-	
+	            
 	            BigInteger p = privateCrtKey.getPrimeP();
 	            BigInteger q = privateCrtKey.getPrimeQ();
 	            BigInteger n = privateCrtKey.getModulus();
 	            BigInteger e = privateCrtKey.getPublicExponent();
 	            BigInteger d = privateCrtKey.getPrivateExponent();
-	       
 	            
+	            BigInteger difference = p.subtract(q);
+	            if (difference.bitLength() < leastDifference){
+	            	leastDifference = difference.bitLength();
+	            }
+	            
+	            differences += difference.bitLength();
+	       
 	            int diff = Math.abs(p.bitLength() - q.bitLength());
 	            if(diff == 0) {
 	                zeroBitsApart++;
@@ -85,6 +94,11 @@ public class Main {
 	            	pqs.add(q);
 	            }
 	            
+	            BigInteger two = new BigInteger("2");
+	            if (p.subtract(q).abs().compareTo(two.pow((n.bitLength()/2 - 100))) <= 0){
+	            	badDiff++;
+	            }
+	            
 	            total++;
 	            nsize += n.bitLength();
 	            esize += e.bitLength();
@@ -107,6 +121,9 @@ public class Main {
 	        System.out.println("Number of keys with repeated p or q: " + samePorQ);
 	        
 	        System.out.println("Time in Seconds: " + elapsed);
+	        System.out.println("Least bitlength of difference between p and q: " + leastDifference);
+	        System.out.println("Average bitlength of difference between p and q: " + differences/10000);
+	        System.out.println("Number of keys which did not follow the NIST standard for difference between p and q: " + badDiff);
     }
 	 
 	 public static void BigIntegerTest(){
