@@ -8,7 +8,7 @@ if __name__ == '__main__':
     # change h for how many p's and q's you want to generate
 
     w = 2 # 2 columns, col 1 = p and col 2= q
-    h = 100 #sets the number of keys too be generated
+    h = 1000 #sets the number of keys too be generated
     Matrix = [[0 for x in range(w)] for y in range(h)] #define matrix size to hold p's and q's
     total_bit_diff = 0
     key_size = 128 #128 bits by default
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     print (str(time.time() - t0) + " seconds to generate " + str(h) + " keys with key size of " + str(key_size))
     
 
-    # print bit difference of each p and q, and the average bit difference of p and q
+    # # print bit difference of each p and q, and the average bit difference of p and q
     for x in xrange(h):
         p_bit_length = Matrix[x][0].bit_length()
         q_bit_length = Matrix[x][1].bit_length()
@@ -44,5 +44,17 @@ if __name__ == '__main__':
         print("Public Key Exp. = " + str(pub_key.e) + " Public Key Mod. = " + str(pub_key.n) + '\n')
         print("Private Key Exp. = " + str(priv_key.d) + " Private Key Mod. = " + str(priv_key.n) + '\n')
         print("---------------------------------------------------------------------------------------")
-           
+    # Check the uniqueness of the mod
+    count = 0
+    for x in xrange(h):
+        if(arr[x][1] == arr[x][3]):
+            temp_mod = arr[x][1] 
+            for i in range(x+1, h):
+                if(temp_mod == arr[i][1] or temp_mod == arr[i][3]):
+                    count = count + 1
+                    print("Modulus are not unique" + '\n')
+        else:
+            count = count + 1
+            print("Modulus are not unique" + '\n')
+    print("Modulus checking complete. " + str(count) + " moduli the same"  '\n')   
         
